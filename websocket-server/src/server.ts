@@ -17,9 +17,15 @@ dotenv.config();
 const PORT = parseInt(process.env.PORT || "8081", 10);
 const PUBLIC_URL = process.env.PUBLIC_URL || "";
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || "";
+const DEEPGRAM_API_KEY = process.env.DEEPGRAM_API_KEY || "";
 
 if (!OPENAI_API_KEY) {
   console.error("OPENAI_API_KEY environment variable is required");
+  process.exit(1);
+}
+
+if (!DEEPGRAM_API_KEY) {
+  console.error("DEEPGRAM_API_KEY environment variable is required");
   process.exit(1);
 }
 
@@ -68,7 +74,7 @@ wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
   if (type === "call") {
     if (currentCall) currentCall.close();
     currentCall = ws;
-    handleCallConnection(currentCall, OPENAI_API_KEY);
+    handleCallConnection(currentCall, OPENAI_API_KEY, DEEPGRAM_API_KEY);
   } else if (type === "logs") {
     if (currentLogs) currentLogs.close();
     currentLogs = ws;

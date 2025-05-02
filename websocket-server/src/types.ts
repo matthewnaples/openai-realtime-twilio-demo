@@ -17,6 +17,8 @@ export interface FunctionCallItem {
 export interface FunctionSchema {
   name: string;
   type: "function";
+  // If true, function arguments must exactly match the schema with no extra properties
+  // strict: boolean;
   description?: string;
   parameters: {
     type: string;

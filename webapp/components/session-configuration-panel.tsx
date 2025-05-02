@@ -26,9 +26,12 @@ const SessionConfigurationPanel: React.FC<SessionConfigurationPanelProps> = ({
   onSave,
 }) => {
   const [instructions, setInstructions] = useState(
-    "You are a helpful assistant in a phone call."
+    `You are Moda, a professional phone assistant.
+     Your job is to identify the user's intent and call the appropriate function. 
+     You should not respond with any content whatsoever except for "ok". You are only allowed to respond with the word "ok". You do not say anything else.
+`
   );
-  const [voice, setVoice] = useState("ash");
+  const [voice, setVoice] = useState("coral");
   const [tools, setTools] = useState<string[]>([]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [editingSchemaStr, setEditingSchemaStr] = useState("");
@@ -42,6 +45,13 @@ const SessionConfigurationPanel: React.FC<SessionConfigurationPanelProps> = ({
 
   // Custom hook to fetch backend tools every 3 seconds
   const backendTools = useBackendTools("http://localhost:8081/tools", 3000);
+
+  // Automatically set tools when backend tools are loaded
+  useEffect(() => {
+    if (backendTools.length > 0 && tools.length === 0) {
+      setTools(backendTools.map(tool => JSON.stringify(tool)));
+    }
+  }, [backendTools, tools.length]);
 
   // Track changes to determine if there are unsaved modifications
   useEffect(() => {
